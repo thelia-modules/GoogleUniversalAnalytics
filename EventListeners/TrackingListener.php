@@ -29,6 +29,11 @@ use Thelia\Model\ConfigQuery;
 class TrackingListener implements EventSubscriberInterface
 {
 
+    /**
+     * Send a transaction and all items to Google Universal Analytics
+     *
+     * @param OrderEvent $event
+     */
     public function track(OrderEvent $event)
     {
         $order = $event->getOrder();
@@ -49,9 +54,9 @@ class TrackingListener implements EventSubscriberInterface
                     ->add('tr', $order->getTotalAmount($tax, false))
                     ->add('tt', $tax)
                     ->add('ts', $order->getPostage())
-                    ->add('cu', $currency);
-
-                $transaction->send();
+                    ->add('cu', $currency)
+                    ->send()
+                ;
 
                 foreach ($order->getOrderProducts() as $product) {
                     $taxes = $product->getOrderProductTaxes();
@@ -76,6 +81,7 @@ class TrackingListener implements EventSubscriberInterface
             }
         }
     }
+
     /**
      * Returns an array of event names this subscriber wants to listen to.
      *
