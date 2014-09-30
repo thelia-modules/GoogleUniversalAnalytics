@@ -18,12 +18,12 @@ namespace GoogleUniversalAnalytics\Measurement;
  * @package GoogleUniversalAnalytics\Measurement
  * @author manuel raynaud <mraynaud@openstudio.fr>
  */
-class Transaction
+class Transaction extends BaseMeasurement
 {
-    protected $data;
-
-    public function __call($name, $arguments)
+    public function __construct()
     {
+        parent::__construct();
 
+        $this->data['t'] = 'transaction';
     }
 }

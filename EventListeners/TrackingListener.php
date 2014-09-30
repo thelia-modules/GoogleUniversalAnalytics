@@ -13,6 +13,8 @@
 namespace GoogleUniversalAnalytics\EventListeners;
 
 use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
+use GoogleUniversalAnalytics\Measurement\Item;
+use GoogleUniversalAnalytics\Measurement\Transaction;
 use GoogleUniversalAnalytics\Model\UniversalanalyticsTransactionQuery;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Order\OrderEvent;
@@ -36,35 +38,41 @@ class TrackingListener implements EventSubscriberInterface
 
             if (null !== $transaction) {
                 $clientId = $transaction->getClientid();
-                $analyticsUA = ConfigQuery::read(GoogleUniversalAnalytics::ANALYTICS_UA);
                 $tax = 0;
-                $transaction = [
-                    'v' => 1,
-                    'tid' => $analyticsUA,
-                    'cid' => $clientId,
-                    't' => 'transaction',
-                    'ti' => $order->getRef(),
-                    'tr' => $order->getTotalAmount($tax, false),
-                    'tt' => $tax,
-                    'ts' => $order->getPostage(),
-                    'cu' => $order->getCurrency()->getCode()
-                ];
+                $currency = $order->getCurrency()->getCode();
+                $ref = $order->getRef();
+                $transaction = new Transaction();
 
-                $query = "";
-                foreach ($transaction as $key => $value) {
-                    $query .= "&".$key."=".$value;
+                $transaction
+                    ->add('cid', $clientId)
+                    ->add('ti', $ref)
+                    ->add('tr', $order->getTotalAmount($tax, false))
+                    ->add('tt', $tax)
+                    ->add('ts', $order->getPostage())
+                    ->add('cu', $currency);
+
+                $transaction->send();
+
+                foreach ($order->getOrderProducts() as $product) {
+                    $taxes = $product->getOrderProductTaxes();
+                    $productTax = 0;
+                    foreach ($taxes as $tax) {
+                        $productTax += $product->getWasInPromo() ? $tax->getPromoAmount() : $tax->getAmount();
+                    }
+
+                    $item = new Item();
+                    $price = $product->getWasInPromo() ? $product->getPromoPrice() : $product->getPrice();
+                    $price += $productTax;
+                    $item->add('cid', $clientId)
+                        ->add('ti', $ref)
+                        ->add('in', $product->getTitle())
+                        ->add('iq', $product->getQuantity())
+                        ->add('ic', $product->getProductRef())
+                        ->add('cu', $currency)
+                        ->add('ip', $price)
+                        ->send()
+                    ;
                 }
-
-                $query = ltrim($query, "&");
-
-                $url = "http://www.google-analytics.com/collect?".$query;
-
-                $curl = curl_init($url);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-                $result = curl_exec($curl);
-                $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-                curl_close($curl);
             }
         }
     }

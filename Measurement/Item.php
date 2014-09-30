@@ -10,32 +10,20 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
-namespace GoogleUniversalAnalytics;
+namespace GoogleUniversalAnalytics\Measurement;
 
-use Propel\Runtime\Connection\ConnectionInterface;
-use Thelia\Install\Database;
-use Thelia\Model\ConfigQuery;
-use Thelia\Module\BaseModule;
 
-class GoogleUniversalAnalytics extends BaseModule
+/**
+ * Class Item
+ * @package GoogleUniversalAnalytics\Measurement
+ * @author manuel raynaud <mraynaud@openstudio.fr>
+ */
+class Item extends BaseMeasurement
 {
-    const ANALYTICS_UA = 'analytics_UA';
-
-    /*
-     * You may now override BaseModuleInterface methods, such as:
-     * install, destroy, preActivation, postActivation, preDeactivation, postDeactivation
-     *
-     * Have fun !
-     */
-
-    public function postActivation(ConnectionInterface $con = null)
+    public function __construct()
     {
-        if (null === ConfigQuery::read(self::ANALYTICS_UA)) {
-            ConfigQuery::write(self::ANALYTICS_UA, '', 1, 1);
-        }
+        parent::__construct();
 
-        $database = new Database($con);
-
-        $database->insertSql(null, array(__DIR__ . '/Config/thelia.sql'));
+        $this->data['t'] = 'item';
     }
 }

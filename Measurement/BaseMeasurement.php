@@ -10,25 +10,44 @@
 /*      file that was distributed with this source code.                             */
 /*************************************************************************************/
 
-namespace GoogleUniversalAnalytics\Controller;
+namespace GoogleUniversalAnalytics\Measurement;
 
 use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
-use Thelia\Controller\Front\BaseFrontController;
-use Thelia\Core\HttpFoundation\Response;
+use Thelia\Model\ConfigQuery;
 
 /**
- * Class Client
- * @package GoogleUniversalAnalytics\Controller
+ * Class BaseMeasurement
+ * @package GoogleUniversalAnalytics\Measurement
  * @author manuel raynaud <mraynaud@openstudio.fr>
  */
-class Client extends BaseFrontController
+class BaseMeasurement
 {
-    public function saveAction()
+    const ANALYTICS_URL = "https://ssl.google-analytics.com/collect";
+
+    protected $data = [];
+
+    public function __construct()
     {
-        $clientId = $this->getRequest()->query->get('clientId');
+        $this->data['v'] = 1;
+        $this->data['tid'] = ConfigQuery::read(GoogleUniversalAnalytics::ANALYTICS_UA);
+    }
 
-        $this->getSession()->set(GoogleUniversalAnalytics::ANALYTICS_UA, $clientId);
+    public function add($key, $value)
+    {
+        $this->data[$key] = $value;
 
-        return Response::create();
+        return $this;
+    }
+
+    public function send()
+    {
+        $ch = curl_init(self::ANALYTICS_URL);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+
+        $result = curl_exec($ch);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
     }
 }

@@ -12,6 +12,7 @@
 
 namespace GoogleUniversalAnalytics\EventListeners;
 
+use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
 use GoogleUniversalAnalytics\Model\UniversalanalyticsTransaction;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Order\OrderEvent;
@@ -34,7 +35,7 @@ class OrderListener implements EventSubscriberInterface
 
     public function saveTransaction(OrderEvent $event)
     {
-        $clientId = $this->request->getSession()->get('UniversalAnalytics.ClientId');
+        $clientId = $this->request->getSession()->get(GoogleUniversalAnalytics::ANALYTICS_UA);
 
         if (null !== $clientId) {
             $order = $event->getPlacedOrder();
