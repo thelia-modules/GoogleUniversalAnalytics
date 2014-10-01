@@ -19,6 +19,7 @@ use GoogleUniversalAnalytics\Model\UniversalanalyticsTransactionQuery;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Order\OrderEvent;
 use Thelia\Core\Event\TheliaEvents;
+use Thelia\Log\Tlog;
 use Thelia\Model\ConfigQuery;
 
 /**
@@ -58,6 +59,8 @@ class TrackingListener implements EventSubscriberInterface
                     ->send()
                 ;
 
+                Tlog::getInstance()->addError('transaction : ' . print_r($transaction->getData(), true));
+
                 foreach ($order->getOrderProducts() as $product) {
                     $taxes = $product->getOrderProductTaxes();
                     $productTax = 0;
@@ -77,6 +80,8 @@ class TrackingListener implements EventSubscriberInterface
                         ->add('ip', $price)
                         ->send()
                     ;
+
+                    Tlog::getInstance()->addError('item : ' . print_r($item->getData(), true));
                 }
             }
         }

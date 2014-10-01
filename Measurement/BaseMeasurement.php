@@ -39,6 +39,11 @@ class BaseMeasurement
         return $this;
     }
 
+    public function getData()
+    {
+        return $this->data;
+    }
+
     public function send()
     {
         $ch = curl_init(self::ANALYTICS_URL);
