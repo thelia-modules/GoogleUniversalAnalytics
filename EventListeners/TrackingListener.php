@@ -49,7 +49,7 @@ class TrackingListener implements EventSubscriberInterface
                 $ref = $order->getRef();
                 $transaction = new Transaction();
 
-                $transaction
+                $status = $transaction
                     ->add('cid', $clientId)
                     ->add('ti', $ref)
                     ->add('tr', $order->getTotalAmount($tax, false))
@@ -60,6 +60,7 @@ class TrackingListener implements EventSubscriberInterface
                 ;
 
                 Tlog::getInstance()->addError('transaction : ' . print_r($transaction->getData(), true));
+                Tlog::getInstance()->addError('status : ' . $status);
 
                 foreach ($order->getOrderProducts() as $product) {
                     $taxes = $product->getOrderProductTaxes();
@@ -71,7 +72,7 @@ class TrackingListener implements EventSubscriberInterface
                     $item = new Item();
                     $price = $product->getWasInPromo() ? $product->getPromoPrice() : $product->getPrice();
                     $price += $productTax;
-                    $item->add('cid', $clientId)
+                    $status = $item->add('cid', $clientId)
                         ->add('ti', $ref)
                         ->add('in', $product->getTitle())
                         ->add('iq', $product->getQuantity())
@@ -82,6 +83,7 @@ class TrackingListener implements EventSubscriberInterface
                     ;
 
                     Tlog::getInstance()->addError('item : ' . print_r($item->getData(), true));
+                    Tlog::getInstance()->addError('status : ' . $status);
                 }
             }
         }

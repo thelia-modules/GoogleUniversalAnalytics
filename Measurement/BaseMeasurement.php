@@ -49,10 +49,12 @@ class BaseMeasurement
         $ch = curl_init(self::ANALYTICS_URL);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($this->getData()));
 
         $result = curl_exec($ch);
         $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
+
+        return $http_status;
     }
 }
