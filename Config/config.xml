@@ -11,9 +11,7 @@
     </loops>
 
     <forms>
-        <!--
-        <form name="MyFormName" class="GoogleUniversalAnalytics\Form\MySuperForm" />
-        -->
+        <form name="GUA.config" class="GoogleUniversalAnalytics\Form\ConfigForm" />
     </forms>
 
     <commands>

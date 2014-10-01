@@ -73,8 +73,8 @@ class OrderListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            TheliaEvents::ORDER_PAY => ["saveTransaction", 0],
-            TheliaEvents::ORDER_CREATE_MANUAL => ["saveTransaction", 0],
+            TheliaEvents::ORDER_PAY => 'saveTransaction',
+            TheliaEvents::ORDER_CREATE_MANUAL => 'saveTransaction',
         ];
     }
 }

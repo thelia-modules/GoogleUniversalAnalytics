@@ -39,11 +39,14 @@ class TrackingListener implements EventSubscriberInterface
     {
         $order = $event->getOrder();
         if ($order->isPaid()) {
-            $transaction = UniversalanalyticsTransactionQuery::create()
-                ->findOneByOrderId($order->getId());
+            $transactionInstance = UniversalanalyticsTransactionQuery::create()
+                ->filterByUsed(0)
+                ->filterByOrderId($order->getId())
+                ->findOne()
+            ;
 
-            if (null !== $transaction) {
-                $clientId = $transaction->getClientid();
+            if (null !== $transactionInstance) {
+                $clientId = $transactionInstance->getClientid();
                 $tax = 0;
                 $currency = $order->getCurrency()->getCode();
                 $ref = $order->getRef();
@@ -59,8 +62,8 @@ class TrackingListener implements EventSubscriberInterface
                     ->send()
                 ;
 
-                Tlog::getInstance()->addError('transaction : ' . print_r($transaction->getData(), true));
-                Tlog::getInstance()->addError('status : ' . $status);
+                Tlog::getInstance()->addInfo('transaction : ' . print_r($transaction->getData(), true));
+                Tlog::getInstance()->addInfo('status : ' . $status);
 
                 foreach ($order->getOrderProducts() as $product) {
                     $taxes = $product->getOrderProductTaxes();
@@ -82,9 +85,13 @@ class TrackingListener implements EventSubscriberInterface
                         ->send()
                     ;
 
-                    Tlog::getInstance()->addError('item : ' . print_r($item->getData(), true));
-                    Tlog::getInstance()->addError('status : ' . $status);
+                    Tlog::getInstance()->addInfo('item : ' . print_r($item->getData(), true));
+                    Tlog::getInstance()->addInfo('status : ' . $status);
                 }
+
+                $transactionInstance
+                    ->setUsed(1)
+                    ->save();
             }
         }
     }
@@ -112,7 +119,7 @@ class TrackingListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            TheliaEvents::ORDER_UPDATE_STATUS => ['track', 0]
+            TheliaEvents::ORDER_UPDATE_STATUS => 'track',
         ];
     }
 }

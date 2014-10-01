@@ -58,7 +58,7 @@ class UniversalanalyticsTransactionTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 3;
+    const NUM_COLUMNS = 4;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class UniversalanalyticsTransactionTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 3;
+    const NUM_HYDRATE_COLUMNS = 4;
 
     /**
      * the column name for the ID field
@@ -86,6 +86,11 @@ class UniversalanalyticsTransactionTableMap extends TableMap
     const ORDER_ID = 'UniversalAnalytics_transaction.ORDER_ID';
 
     /**
+     * the column name for the USED field
+     */
+    const USED = 'UniversalAnalytics_transaction.USED';
+
+    /**
      * The default string format for model objects of the related table
      */
     const DEFAULT_STRING_FORMAT = 'YAML';
@@ -97,12 +102,12 @@ class UniversalanalyticsTransactionTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Clientid', 'OrderId', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'clientid', 'orderId', ),
-        self::TYPE_COLNAME       => array(UniversalanalyticsTransactionTableMap::ID, UniversalanalyticsTransactionTableMap::CLIENTID, UniversalanalyticsTransactionTableMap::ORDER_ID, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'CLIENTID', 'ORDER_ID', ),
-        self::TYPE_FIELDNAME     => array('id', 'clientId', 'order_id', ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id', 'Clientid', 'OrderId', 'Used', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'clientid', 'orderId', 'used', ),
+        self::TYPE_COLNAME       => array(UniversalanalyticsTransactionTableMap::ID, UniversalanalyticsTransactionTableMap::CLIENTID, UniversalanalyticsTransactionTableMap::ORDER_ID, UniversalanalyticsTransactionTableMap::USED, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'CLIENTID', 'ORDER_ID', 'USED', ),
+        self::TYPE_FIELDNAME     => array('id', 'clientId', 'order_id', 'used', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -112,12 +117,12 @@ class UniversalanalyticsTransactionTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Clientid' => 1, 'OrderId' => 2, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'clientid' => 1, 'orderId' => 2, ),
-        self::TYPE_COLNAME       => array(UniversalanalyticsTransactionTableMap::ID => 0, UniversalanalyticsTransactionTableMap::CLIENTID => 1, UniversalanalyticsTransactionTableMap::ORDER_ID => 2, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CLIENTID' => 1, 'ORDER_ID' => 2, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'clientId' => 1, 'order_id' => 2, ),
-        self::TYPE_NUM           => array(0, 1, 2, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Clientid' => 1, 'OrderId' => 2, 'Used' => 3, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'clientid' => 1, 'orderId' => 2, 'used' => 3, ),
+        self::TYPE_COLNAME       => array(UniversalanalyticsTransactionTableMap::ID => 0, UniversalanalyticsTransactionTableMap::CLIENTID => 1, UniversalanalyticsTransactionTableMap::ORDER_ID => 2, UniversalanalyticsTransactionTableMap::USED => 3, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'CLIENTID' => 1, 'ORDER_ID' => 2, 'USED' => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'clientId' => 1, 'order_id' => 2, 'used' => 3, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
     /**
@@ -139,6 +144,7 @@ class UniversalanalyticsTransactionTableMap extends TableMap
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('CLIENTID', 'Clientid', 'VARCHAR', false, 255, null);
         $this->addColumn('ORDER_ID', 'OrderId', 'INTEGER', false, null, null);
+        $this->addColumn('USED', 'Used', 'INTEGER', false, null, 0);
     } // initialize()
 
     /**
@@ -289,10 +295,12 @@ class UniversalanalyticsTransactionTableMap extends TableMap
             $criteria->addSelectColumn(UniversalanalyticsTransactionTableMap::ID);
             $criteria->addSelectColumn(UniversalanalyticsTransactionTableMap::CLIENTID);
             $criteria->addSelectColumn(UniversalanalyticsTransactionTableMap::ORDER_ID);
+            $criteria->addSelectColumn(UniversalanalyticsTransactionTableMap::USED);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
             $criteria->addSelectColumn($alias . '.CLIENTID');
             $criteria->addSelectColumn($alias . '.ORDER_ID');
+            $criteria->addSelectColumn($alias . '.USED');
         }
     }
 

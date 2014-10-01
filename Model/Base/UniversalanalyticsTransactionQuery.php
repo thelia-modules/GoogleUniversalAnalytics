@@ -21,10 +21,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUniversalanalyticsTransactionQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildUniversalanalyticsTransactionQuery orderByClientid($order = Criteria::ASC) Order by the clientId column
  * @method     ChildUniversalanalyticsTransactionQuery orderByOrderId($order = Criteria::ASC) Order by the order_id column
+ * @method     ChildUniversalanalyticsTransactionQuery orderByUsed($order = Criteria::ASC) Order by the used column
  *
  * @method     ChildUniversalanalyticsTransactionQuery groupById() Group by the id column
  * @method     ChildUniversalanalyticsTransactionQuery groupByClientid() Group by the clientId column
  * @method     ChildUniversalanalyticsTransactionQuery groupByOrderId() Group by the order_id column
+ * @method     ChildUniversalanalyticsTransactionQuery groupByUsed() Group by the used column
  *
  * @method     ChildUniversalanalyticsTransactionQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildUniversalanalyticsTransactionQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -36,10 +38,12 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildUniversalanalyticsTransaction findOneById(int $id) Return the first ChildUniversalanalyticsTransaction filtered by the id column
  * @method     ChildUniversalanalyticsTransaction findOneByClientid(string $clientId) Return the first ChildUniversalanalyticsTransaction filtered by the clientId column
  * @method     ChildUniversalanalyticsTransaction findOneByOrderId(int $order_id) Return the first ChildUniversalanalyticsTransaction filtered by the order_id column
+ * @method     ChildUniversalanalyticsTransaction findOneByUsed(int $used) Return the first ChildUniversalanalyticsTransaction filtered by the used column
  *
  * @method     array findById(int $id) Return ChildUniversalanalyticsTransaction objects filtered by the id column
  * @method     array findByClientid(string $clientId) Return ChildUniversalanalyticsTransaction objects filtered by the clientId column
  * @method     array findByOrderId(int $order_id) Return ChildUniversalanalyticsTransaction objects filtered by the order_id column
+ * @method     array findByUsed(int $used) Return ChildUniversalanalyticsTransaction objects filtered by the used column
  *
  */
 abstract class UniversalanalyticsTransactionQuery extends ModelCriteria
@@ -128,7 +132,7 @@ abstract class UniversalanalyticsTransactionQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, CLIENTID, ORDER_ID FROM UniversalAnalytics_transaction WHERE ID = :p0';
+        $sql = 'SELECT ID, CLIENTID, ORDER_ID, USED FROM UniversalAnalytics_transaction WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -326,6 +330,47 @@ abstract class UniversalanalyticsTransactionQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(UniversalanalyticsTransactionTableMap::ORDER_ID, $orderId, $comparison);
+    }
+
+    /**
+     * Filter the query on the used column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByUsed(1234); // WHERE used = 1234
+     * $query->filterByUsed(array(12, 34)); // WHERE used IN (12, 34)
+     * $query->filterByUsed(array('min' => 12)); // WHERE used > 12
+     * </code>
+     *
+     * @param     mixed $used The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildUniversalanalyticsTransactionQuery The current query, for fluid interface
+     */
+    public function filterByUsed($used = null, $comparison = null)
+    {
+        if (is_array($used)) {
+            $useMinMax = false;
+            if (isset($used['min'])) {
+                $this->addUsingAlias(UniversalanalyticsTransactionTableMap::USED, $used['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($used['max'])) {
+                $this->addUsingAlias(UniversalanalyticsTransactionTableMap::USED, $used['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(UniversalanalyticsTransactionTableMap::USED, $used, $comparison);
     }
 
     /**

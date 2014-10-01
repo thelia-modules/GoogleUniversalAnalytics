@@ -32,4 +32,8 @@
         <default key="_controller">GoogleUniversalAnalytics\Controller\Client::saveAction</default>
     </route>
 
+    <route id="UniversalAnalytics.config.save" path="admin/module/GoogleUniversalAnalytics/save" methods="post">
+        <default key="_controller">GoogleUniversalAnalytics\Controller\ConfigController::saveAction</default>
+    </route>
+
 </routes>

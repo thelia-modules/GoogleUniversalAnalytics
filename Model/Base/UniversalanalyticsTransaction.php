@@ -70,6 +70,13 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
     protected $order_id;
 
     /**
+     * The value for the used field.
+     * Note: this column has a database default value of: 0
+     * @var        int
+     */
+    protected $used;
+
+    /**
      * Flag to prevent endless save loop, if this object is referenced
      * by another object which falls in this transaction.
      *
@@ -78,10 +85,23 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues()
+    {
+        $this->used = 0;
+    }
+
+    /**
      * Initializes internal state of GoogleUniversalAnalytics\Model\Base\UniversalanalyticsTransaction object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -369,6 +389,17 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
     }
 
     /**
+     * Get the [used] column value.
+     *
+     * @return   int
+     */
+    public function getUsed()
+    {
+
+        return $this->used;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param      int $v new value
@@ -432,6 +463,27 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
     } // setOrderId()
 
     /**
+     * Set the value of [used] column.
+     *
+     * @param      int $v new value
+     * @return   \GoogleUniversalAnalytics\Model\UniversalanalyticsTransaction The current object (for fluent API support)
+     */
+    public function setUsed($v)
+    {
+        if ($v !== null) {
+            $v = (int) $v;
+        }
+
+        if ($this->used !== $v) {
+            $this->used = $v;
+            $this->modifiedColumns[UniversalanalyticsTransactionTableMap::USED] = true;
+        }
+
+
+        return $this;
+    } // setUsed()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -441,6 +493,10 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues()
     {
+            if ($this->used !== 0) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     } // hasOnlyDefaultValues()
@@ -476,6 +532,9 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UniversalanalyticsTransactionTableMap::translateFieldName('OrderId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->order_id = (null !== $col) ? (int) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : UniversalanalyticsTransactionTableMap::translateFieldName('Used', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->used = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -484,7 +543,7 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = UniversalanalyticsTransactionTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = UniversalanalyticsTransactionTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \GoogleUniversalAnalytics\Model\UniversalanalyticsTransaction object", 0, $e);
@@ -702,6 +761,9 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
         if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::ORDER_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ORDER_ID';
         }
+        if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::USED)) {
+            $modifiedColumns[':p' . $index++]  = 'USED';
+        }
 
         $sql = sprintf(
             'INSERT INTO UniversalAnalytics_transaction (%s) VALUES (%s)',
@@ -721,6 +783,9 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
                         break;
                     case 'ORDER_ID':
                         $stmt->bindValue($identifier, $this->order_id, PDO::PARAM_INT);
+                        break;
+                    case 'USED':
+                        $stmt->bindValue($identifier, $this->used, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -793,6 +858,9 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
             case 2:
                 return $this->getOrderId();
                 break;
+            case 3:
+                return $this->getUsed();
+                break;
             default:
                 return null;
                 break;
@@ -824,6 +892,7 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
             $keys[0] => $this->getId(),
             $keys[1] => $this->getClientid(),
             $keys[2] => $this->getOrderId(),
+            $keys[3] => $this->getUsed(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -872,6 +941,9 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
             case 2:
                 $this->setOrderId($value);
                 break;
+            case 3:
+                $this->setUsed($value);
+                break;
         } // switch()
     }
 
@@ -899,6 +971,7 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
         if (array_key_exists($keys[0], $arr)) $this->setId($arr[$keys[0]]);
         if (array_key_exists($keys[1], $arr)) $this->setClientid($arr[$keys[1]]);
         if (array_key_exists($keys[2], $arr)) $this->setOrderId($arr[$keys[2]]);
+        if (array_key_exists($keys[3], $arr)) $this->setUsed($arr[$keys[3]]);
     }
 
     /**
@@ -913,6 +986,7 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
         if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::ID)) $criteria->add(UniversalanalyticsTransactionTableMap::ID, $this->id);
         if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::CLIENTID)) $criteria->add(UniversalanalyticsTransactionTableMap::CLIENTID, $this->clientid);
         if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::ORDER_ID)) $criteria->add(UniversalanalyticsTransactionTableMap::ORDER_ID, $this->order_id);
+        if ($this->isColumnModified(UniversalanalyticsTransactionTableMap::USED)) $criteria->add(UniversalanalyticsTransactionTableMap::USED, $this->used);
 
         return $criteria;
     }
@@ -978,6 +1052,7 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
     {
         $copyObj->setClientid($this->getClientid());
         $copyObj->setOrderId($this->getOrderId());
+        $copyObj->setUsed($this->getUsed());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1014,8 +1089,10 @@ abstract class UniversalanalyticsTransaction implements ActiveRecordInterface
         $this->id = null;
         $this->clientid = null;
         $this->order_id = null;
+        $this->used = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

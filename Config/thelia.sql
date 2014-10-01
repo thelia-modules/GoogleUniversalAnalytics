@@ -14,6 +14,7 @@ CREATE TABLE `UniversalAnalytics_transaction`
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `clientId` VARCHAR(255),
     `order_id` INTEGER,
+    `used` INTEGER DEFAULT 0,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
