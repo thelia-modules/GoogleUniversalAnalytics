@@ -8,28 +8,20 @@ For each new order paid, the module send to Analytics a new transaction and all 
 
 ## Installation
 
+If you are using Thelia 2.0.* please download from branch 2.0 or tag 2.0.*.
+
+If you are using Thelia 2.1.* please download from branch master or tag 2.1.*
+
+Following which version of the module you use, the integration is different. Read carefully the good readme.
+
 - Copy the module into ```<thelia_root>/local/modules/``` directory and be sure that the name of the module is GoogleUniversalAnalytics
 - Activate it in your Thelia administration panel, then click on "configure" and enter your Analytics id (UA-XXXXX-X) and save it.
 
 ## Integration
 
-You need to put a js tag in the file ```order-invoice.html``` in your active front-office template.
+No integration needed, the hook ```order-invoice.after-javascript-include``` is used
 
-```
-<script>
-    ga(function(tracker) {
-        clientId = tracker.get('clientId');
-        $.ajax({
-           'url': "{url path='/UniversalAnalytics/ClientId'}",
-            'data': {
-                'clientId': clientId
-            }
-        });
-    });
-</script>
-```
-
-This script must be placed after the google analytics code, just before the ```</body>``` tag.
+This script must be placed after the google analytics code.
 
 ## Usage
 
