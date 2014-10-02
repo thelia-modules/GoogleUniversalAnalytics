@@ -3,11 +3,12 @@
     <fullnamespace>GoogleUniversalAnalytics\GoogleUniversalAnalytics</fullnamespace>
     <descriptive locale="en_US">
         <title>Google Universal Analytics integration</title>
+        <description>Save all</description>
     </descriptive>
     <descriptive locale="fr_FR">
         <title>Intégration de Google Universal Analytics</title>
     </descriptive>
-    <version>0.1</version>
+    <version>2.0.0</version>
     <author>
         <name>Manuel Raynaud</name>
         <email>manu@thelia.net</email>
