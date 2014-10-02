@@ -1,0 +1,11 @@
+<script>
+    ga(function(tracker) {
+        clientId = tracker.get('clientId');
+        $.ajax({
+            'url': "{url path='/UniversalAnalytics/ClientId'}",
+            'data': {
+                'clientId': clientId
+            }
+        });
+    });
+</script>

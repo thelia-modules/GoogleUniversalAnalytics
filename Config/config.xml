@@ -8,6 +8,12 @@
         <form name="GUA.config" class="GoogleUniversalAnalytics\Form\ConfigForm" />
     </forms>
 
+    <hooks>
+        <hook id="UniversalAnalytics.hook.order.invoice" class="GoogleUniversalAnalytics\Hook\Client" scope="request">
+            <tag name="hook.event_listener" event="order-invoice.after-javascript-include" method="insertTag" />
+        </hook>
+    </hooks>
+
     <services>
         <service id="UniversalAnalytics.order.create" class="GoogleUniversalAnalytics\EventListeners\OrderListener" scope="request">
             <argument type="service" id="request" />
