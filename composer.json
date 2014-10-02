@@ -1,0 +1,18 @@
+{
+    "name": "thelia/google-universal-analytics",
+    "type": "thelia-module",
+    "description": "Google Universal Analytics integration for ecommerce tracking ",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Manuel Raynaud",
+            "email": "manu@thelia.net"
+        }
+    ],
+    "require": {
+        "thelia/installer": "~1.0"
+    },
+    "extra": {
+        "installer-name": "GoogleUniversalAnalytics"
+    }
+}
