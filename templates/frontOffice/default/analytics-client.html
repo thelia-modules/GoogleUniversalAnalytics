@@ -1,11 +1,34 @@
 <script>
-    ga(function(tracker) {
-        clientId = tracker.get('clientId');
-        $.ajax({
-            'url': "{url path='/UniversalAnalytics/ClientId'}",
-            'data': {
-                'clientId': clientId
-            }
+    if (typeof ga=="undefined") {
+        var js;
+        var html_doc = document.getElementsByTagName('head').item(0);
+        js = document.createElement('script');
+        js.setAttribute('type', 'text/javascript');
+        js.setAttribute('src', "//www.google-analytics.com/analytics.js");
+        html_doc.appendChild(js);
+
+        // onscript ready IE
+        js.onreadystatechange = function () {
+            initGaTracker();
+        };
+
+        // onscript ready else
+        js.onload = function () {
+            initGaTracker();
+        }
+    } else {
+        initGaTracker();
+    }
+
+    function initGaTracker() {
+        ga(function(tracker) {
+            clientId = tracker.get('clientId');
+            $.ajax({
+                'url': "{url path='/UniversalAnalytics/ClientId'}",
+                'data': {
+                    'clientId': clientId
+                }
+            });
         });
-    });
+    }
 </script>
