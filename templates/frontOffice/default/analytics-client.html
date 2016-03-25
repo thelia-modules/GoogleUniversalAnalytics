@@ -6,15 +6,16 @@
         js.setAttribute('type', 'text/javascript');
         js.setAttribute('src', "//www.google-analytics.com/analytics.js");
         html_doc.appendChild(js);
-        ga('create', '{config key='analytics_UA'}', 'auto');
 
         // onscript ready IE
         js.onreadystatechange = function () {
+            ga('create', '{config key='analytics_UA'}', 'auto');
             initGaTracker();
         };
 
         // onscript ready else
         js.onload = function () {
+            ga('create', '{config key='analytics_UA'}', 'auto');
             initGaTracker();
         }
     } else {
