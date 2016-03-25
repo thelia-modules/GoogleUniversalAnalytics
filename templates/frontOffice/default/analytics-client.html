@@ -6,6 +6,7 @@
         js.setAttribute('type', 'text/javascript');
         js.setAttribute('src', "//www.google-analytics.com/analytics.js");
         html_doc.appendChild(js);
+        ga('create', '{config key='analytics_UA'}', 'auto');
 
         // onscript ready IE
         js.onreadystatechange = function () {
