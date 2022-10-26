@@ -13,6 +13,7 @@
 namespace GoogleUniversalAnalytics;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Thelia\Install\Database;
 use Thelia\Model\ConfigQuery;
 use Thelia\Module\BaseModule;
@@ -28,7 +29,7 @@ class GoogleUniversalAnalytics extends BaseModule
      * Have fun !
      */
 
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(ConnectionInterface $con = null): void
     {
         if (null === ConfigQuery::read(self::ANALYTICS_UA)) {
             ConfigQuery::write(self::ANALYTICS_UA, '', 1, 1);
@@ -37,5 +38,13 @@ class GoogleUniversalAnalytics extends BaseModule
         $database = new Database($con);
 
         $database->insertSql(null, array(__DIR__ . '/Config/thelia.sql'));
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 }

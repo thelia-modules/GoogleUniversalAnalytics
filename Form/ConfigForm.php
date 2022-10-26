@@ -13,6 +13,7 @@
 namespace GoogleUniversalAnalytics\Form;
 
 use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 use Thelia\Model\ConfigQuery;
@@ -50,7 +51,7 @@ class ConfigForm extends BaseForm
     {
         $this->formBuilder->add(
             'tracking_id',
-            'text',
+            TextType::class,
             [
                 'data' => ConfigQuery::read(GoogleUniversalAnalytics::ANALYTICS_UA, ''),
                 'label' => Translator::getInstance()->trans("Tracking Code"),
@@ -64,7 +65,7 @@ class ConfigForm extends BaseForm
     /**
      * @return string the name of you form. This name must be unique
      */
-    public function getName()
+    public static function getName()
     {
         return "GUA_config";
     }

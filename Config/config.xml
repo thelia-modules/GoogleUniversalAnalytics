@@ -9,14 +9,14 @@
     </forms>
 
     <hooks>
-        <hook id="UniversalAnalytics.hook.order.invoice" class="GoogleUniversalAnalytics\Hook\Client" scope="request">
+        <hook id="UniversalAnalytics.hook.order.invoice" class="GoogleUniversalAnalytics\Hook\Client">
             <tag name="hook.event_listener" event="order-invoice.after-javascript-include" method="insertTag" />
         </hook>
     </hooks>
 
     <services>
-        <service id="UniversalAnalytics.order.create" class="GoogleUniversalAnalytics\EventListeners\OrderListener" scope="request">
-            <argument type="service" id="request" />
+        <service id="UniversalAnalytics.order.create" class="GoogleUniversalAnalytics\EventListeners\OrderListener">
+            <argument type="service" id="request_stack" />
             <tag name="kernel.event_subscriber"/>
         </service>
 

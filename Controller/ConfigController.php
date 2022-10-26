@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Form\Exception\FormValidationException;
 use Thelia\Model\ConfigQuery;
 use Thelia\Tools\URL;
 
@@ -35,7 +36,7 @@ class ConfigController extends BaseAdminController
             return $response;
         }
 
-        $form = new ConfigForm($this->getRequest());
+        $form = $this->createForm(ConfigForm::getName());
         $error_message = null;
         $response = null;
         try {
@@ -43,9 +44,11 @@ class ConfigController extends BaseAdminController
 
             ConfigQuery::write(GoogleUniversalAnalytics::ANALYTICS_UA, $vform->get('tracking_id')->getData(), 1, 1);
 
-            $response = RedirectResponse::create(URL::getInstance()->absoluteUrl('/admin/module/GoogleUniversalAnalytics'));
-        } catch (\Exception $e) {
+            $response = new RedirectResponse(URL::getInstance()->absoluteUrl('/admin/module/GoogleUniversalAnalytics'));
+        } catch (FormValidationException $e) {
             $error_message = $this->createStandardFormValidationErrorMessage($e);
+        } catch (\Exception $e) {
+            $error_message = $e->getMessage();
         }
 
         if (null !== $error_message) {

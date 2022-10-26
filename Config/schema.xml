@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database defaultIdMethod="native" name="thelia" namespace="GoogleUniversalAnalytics\Model">
+<database defaultIdMethod="native" name="TheliaMain" namespace="GoogleUniversalAnalytics\Model">
 
     <table name="UniversalAnalytics_transaction">
         <column name="id" primaryKey="true" autoIncrement="true" required="true" type="INTEGER" />

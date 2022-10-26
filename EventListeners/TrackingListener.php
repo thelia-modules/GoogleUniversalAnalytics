@@ -12,7 +12,6 @@
 
 namespace GoogleUniversalAnalytics\EventListeners;
 
-use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
 use GoogleUniversalAnalytics\Measurement\Item;
 use GoogleUniversalAnalytics\Measurement\Transaction;
 use GoogleUniversalAnalytics\Model\UniversalanalyticsTransactionQuery;
@@ -20,7 +19,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Order\OrderEvent;
 use Thelia\Core\Event\TheliaEvents;
 use Thelia\Log\Tlog;
-use Thelia\Model\ConfigQuery;
 
 /**
  * Class TrackingListener
@@ -32,8 +30,9 @@ class TrackingListener implements EventSubscriberInterface
 
     /**
      * Send a transaction and all items to Google Universal Analytics
-     *
      * @param OrderEvent $event
+     * @return void
+     * @throws \Propel\Runtime\Exception\PropelException
      */
     public function track(OrderEvent $event)
     {

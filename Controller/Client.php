@@ -14,6 +14,7 @@ namespace GoogleUniversalAnalytics\Controller;
 
 use GoogleUniversalAnalytics\GoogleUniversalAnalytics;
 use Thelia\Controller\Front\BaseFrontController;
+use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\HttpFoundation\Response;
 
 /**
@@ -23,12 +24,12 @@ use Thelia\Core\HttpFoundation\Response;
  */
 class Client extends BaseFrontController
 {
-    public function saveAction()
+    public function saveAction(Request $request)
     {
-        $clientId = $this->getRequest()->query->get('clientId');
+        $clientId = $request->query->get('clientId');
 
-        $this->getSession()->set(GoogleUniversalAnalytics::ANALYTICS_UA, $clientId);
+        $request->getSession()->set(GoogleUniversalAnalytics::ANALYTICS_UA, $clientId);
 
-        return Response::create();
+        return new Response();
     }
 }
